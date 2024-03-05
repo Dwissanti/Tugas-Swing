@@ -1,0 +1,126 @@
+import java.util.ArrayList;
+import java.util.Scanner;
+
+class Flight {
+    private String flightNumber;
+    private String destination;
+    private int availableSeats;
+
+    public Flight(String flightNumber, String destination, int availableSeats) {
+        this.flightNumber = flightNumber;
+        this.destination = destination;
+        this.availableSeats = availableSeats;
+    }
+
+    public String getFlightNumber() {
+        return flightNumber;
+    }
+
+    public String getDestination() {
+        return destination;
+    }
+
+    public int getAvailableSeats() {
+        return availableSeats;
+    }
+
+    public void bookSeats(int numSeats) {
+        if (numSeats <= availableSeats) {
+            availableSeats -= numSeats;
+            System.out.println(numSeats + " seat(s) booked successfully for Flight " + flightNumber);
+        } else {
+            System.out.println("Sorry, not enough seats available for Flight " + flightNumber);
+        }
+    }
+}
+
+class Customer {
+    private String name;
+    private String email;
+
+    public Customer(String name, String email) {
+        this.name = name;
+        this.email = email;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+}
+
+class Reservation {
+    private Customer customer;
+    private Flight flight;
+    private int numSeats;
+
+    public Reservation(Customer customer, Flight flight, int numSeats) {
+        this.customer = customer;
+        this.flight = flight;
+        this.numSeats = numSeats;
+        flight.bookSeats(numSeats);
+    }
+
+    public void displayReservationDetails() {
+        System.out.println("Reservation Details:");
+        System.out.println("Customer Name: " + customer.getName());
+        System.out.println("Customer Email: " + customer.getEmail());
+        System.out.println("Flight Number: " + flight.getFlightNumber());
+        System.out.println("Destination: " + flight.getDestination());
+        System.out.println("Number of Seats: " + numSeats);
+    }
+}
+
+public class AirlineReservationSystem {
+    public static void main(String[] args) {
+        // Contoh penggunaan sistem reservasi maskapai penerbangan
+        Flight flight1 = new Flight("ABC123", "New York", 50);
+        Flight flight2 = new Flight("XYZ456", "Los Angeles", 30);
+
+        ArrayList<Flight> flights = new ArrayList<>();
+        flights.add(flight1);
+        flights.add(flight2);
+
+        Scanner scanner = new Scanner(System.in);
+
+        System.out.println("Welcome to the Airline Reservation System");
+
+        System.out.print("Enter your name: ");
+        String customerName = scanner.nextLine();
+
+        System.out.print("Enter your email: ");
+        String customerEmail = scanner.nextLine();
+
+        Customer customer = new Customer(customerName, customerEmail);
+
+        System.out.println("Available Flights:");
+        for (Flight flight : flights) {
+            System.out.println(flight.getFlightNumber() + " - " + flight.getDestination() +
+                    " (" + flight.getAvailableSeats() + " seats available)");
+        }
+
+        System.out.print("Enter the flight number you want to book: ");
+        String selectedFlightNumber = scanner.nextLine();
+
+        Flight selectedFlight = null;
+        for (Flight flight : flights) {
+            if (flight.getFlightNumber().equals(selectedFlightNumber)) {
+                selectedFlight = flight;
+                break;
+            }
+        }
+
+        if (selectedFlight != null) {
+            System.out.print("Enter the number of seats you want to book: ");
+            int numSeats = scanner.nextInt();
+
+            Reservation reservation = new Reservation(customer, selectedFlight, numSeats);
+            reservation.displayReservationDetails();
+        } else {
+            System.out.println("Invalid flight number. Reservation failed.");
+        }
+    }
+}
